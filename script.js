@@ -51,7 +51,6 @@ searchBtn.addEventListener('click', () => {
     const query = searchInput.value.trim();
     fetchNews(query);
 });
-
-// Load top headlines on page load
 fetchNews();
+
 
