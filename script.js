@@ -16,11 +16,14 @@ async function fetchNews(query = '') {
         const response = await fetch(url);
         const data = await response.json();
 
-        if (data.articles && data.articles.length > 0) {
-            displayArticles(data.articles);
-        } else {
-            newsContainer.innerHTML = '<p>No articles found.</p>';
-        }
+    if (data.articles && data.articles.length > 0) {
+    displayArticles(data.articles);
+    } else if (query) {
+    fetchNews('');
+    } else {
+    newsContainer.innerHTML = '<p>No articles found.</p>';
+}
+
     } catch (error) {
         newsContainer.innerHTML = `<p>Error fetching news: ${error}</p>`;
         console.error(error);
@@ -48,4 +51,5 @@ searchBtn.addEventListener('click', () => {
 });
 
 fetchNews();
+
 
