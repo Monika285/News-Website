@@ -1,29 +1,23 @@
+const apiKey = 'pub_25b285170f7842f8afbb3844c6cc13d6'; 
 const newsContainer = document.getElementById('news-container');
 const searchInput = document.getElementById('search-input');
 const searchBtn = document.getElementById('search-btn');
 
-const apiKey = 'b1382480f8acf2296113928b601286fe'; 
-
 async function fetchNews(query = '') {
     try {
-        let url = `https://gnews.io/api/v4/top-headlines?token=${apiKey}&lang=en&country=in&max=12`;
+        let url = `https://newsdata.io/api/1/news?apikey=${apiKey}&language=en`;
         if (query) {
-            url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(query)}&token=${apiKey}&max=12&lang=en`;
+            url += `&q=${encodeURIComponent(query)}`;
         }
-
-        console.log("Fetching URL:", url); 
 
         const response = await fetch(url);
         const data = await response.json();
 
-    if (data.articles && data.articles.length > 0) {
-    displayArticles(data.articles);
-    } else if (query) {
-    fetchNews('');
-    } else {
-    newsContainer.innerHTML = '<p>No articles found.</p>';
-}
-
+        if (data.status === 'ok' && data.results.length > 0) {
+            displayArticles(data.results);
+        } else {
+            newsContainer.innerHTML = '<p>No articles found.</p>';
+        }
     } catch (error) {
         newsContainer.innerHTML = `<p>Error fetching news: ${error}</p>`;
         console.error(error);
@@ -36,10 +30,10 @@ function displayArticles(newsArticles) {
         const articleElement = document.createElement('div');
         articleElement.className = 'article';
         articleElement.innerHTML = `
-            <img src="${article.image || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="${article.title}">
+            <img src="${article.image_url || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="${article.title}">
             <h2>${article.title}</h2>
             <p>${article.description || ''}</p>
-            <a href="${article.url}" target="_blank">Read More</a>
+            <a href="${article.link}" target="_blank">Read More</a>
         `;
         newsContainer.appendChild(articleElement);
     });
@@ -50,6 +44,4 @@ searchBtn.addEventListener('click', () => {
     fetchNews(query);
 });
 
-fetchNews();
-
-
+fetchNews(); 
