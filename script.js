@@ -3,24 +3,25 @@ const searchInput = document.getElementById('search-input');
 const searchBtn = document.getElementById('search-btn');
 
 
-const apiKey = '619b988821f54e59b93ec6327aa6700e';
+const apiKey = 'b1382480f8acf2296113928b601286fe';
 
 
 async function fetchNews(query = '') {
     try {
-        let url = `https://newsapi.org/v2/top-headlines?country=in&pageSize=12&apiKey=${apiKey}`;
+        let url = `https://gnews.io/api/v4/top-headlines?token=${apiKey}&lang=en&country=in`;
         if (query) {
-            url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&pageSize=12&apiKey=${apiKey}`;
-        }
+    url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(query)}&token=${apiKey}&max=12&lang=en`;
+    }
 
         const response = await fetch(url);
         const data = await response.json();
 
-        if (data.status === 'ok') {
-            displayArticles(data.articles);
-        } else {
-            newsContainer.innerHTML = `<p>Error fetching news: ${data.message}</p>`;
-        }
+    if (data.articles && data.articles.length > 0) {
+    displayArticles(data.articles);
+    } else {
+    newsContainer.innerHTML = '<p>No articles found.</p>';
+    }
+
     } catch (error) {
         newsContainer.innerHTML = `<p>Error fetching news: ${error}</p>`;
         console.error(error);
@@ -37,7 +38,7 @@ function displayArticles(newsArticles) {
         const articleElement = document.createElement('div');
         articleElement.className = 'article';
         articleElement.innerHTML = `
-            <img src="${article.urlToImage || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="${article.title}">
+            <img src="${article.image || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="${article.title}">
             <h2>${article.title}</h2>
             <p>${article.description || ''}</p>
             <a href="${article.url}" target="_blank">Read More</a>
@@ -52,5 +53,6 @@ searchBtn.addEventListener('click', () => {
     fetchNews(query);
 });
 fetchNews();
+
 
 
