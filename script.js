@@ -2,26 +2,25 @@ const newsContainer = document.getElementById('news-container');
 const searchInput = document.getElementById('search-input');
 const searchBtn = document.getElementById('search-btn');
 
-
-const apiKey = 'b1382480f8acf2296113928b601286fe';
-
+const apiKey = 'b1382480f8acf2296113928b601286fe'; 
 
 async function fetchNews(query = '') {
     try {
-        let url = `https://gnews.io/api/v4/top-headlines?token=${apiKey}&lang=en&country=in`;
+        let url = `https://gnews.io/api/v4/top-headlines?token=${apiKey}&lang=en&country=in&max=12`;
         if (query) {
-    url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(query)}&token=${apiKey}&max=12&lang=en`;
-    }
+            url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(query)}&token=${apiKey}&max=12&lang=en`;
+        }
+
+        console.log("Fetching URL:", url); 
 
         const response = await fetch(url);
         const data = await response.json();
 
-    if (data.articles && data.articles.length > 0) {
-    displayArticles(data.articles);
-    } else {
-    newsContainer.innerHTML = '<p>No articles found.</p>';
-    }
-
+        if (data.articles && data.articles.length > 0) {
+            displayArticles(data.articles);
+        } else {
+            newsContainer.innerHTML = '<p>No articles found.</p>';
+        }
     } catch (error) {
         newsContainer.innerHTML = `<p>Error fetching news: ${error}</p>`;
         console.error(error);
@@ -30,10 +29,6 @@ async function fetchNews(query = '') {
 
 function displayArticles(newsArticles) {
     newsContainer.innerHTML = '';
-    if (!newsArticles.length) {
-        newsContainer.innerHTML = '<p>No articles found.</p>';
-        return;
-    }
     newsArticles.forEach(article => {
         const articleElement = document.createElement('div');
         articleElement.className = 'article';
@@ -47,12 +42,10 @@ function displayArticles(newsArticles) {
     });
 }
 
-
 searchBtn.addEventListener('click', () => {
     const query = searchInput.value.trim();
     fetchNews(query);
 });
+
 fetchNews();
-
-
 
