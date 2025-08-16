@@ -1,5 +1,12 @@
 # News-Website
-A dynamic news website -  that aggregates articles from global sources, providing users with a one-stop destination for diverse and up-to-date news content.
+A dynamic news website -
+
+🌍 Aggregates news from multiple global sources
+
+📰 Real-time headlines and trending stories
+
+📂 Category-based browsing for easy navigation
+
 
 LIVE DEMO : 
 
