@@ -2,10 +2,10 @@ const newsContainer = document.getElementById('news-container');
 const searchInput = document.getElementById('search-input');
 const searchBtn = document.getElementById('search-btn');
 
-// Replace with your actual NewsAPI key
+
 const apiKey = '619b988821f54e59b93ec6327aa6700e';
 
-// Fetch news (optionally by search query)
+
 async function fetchNews(query = '') {
     try {
         let url = `https://newsapi.org/v2/top-headlines?country=in&pageSize=12&apiKey=${apiKey}`;
@@ -27,7 +27,6 @@ async function fetchNews(query = '') {
     }
 }
 
-// Display articles
 function displayArticles(newsArticles) {
     newsContainer.innerHTML = '';
     if (!newsArticles.length) {
@@ -47,7 +46,7 @@ function displayArticles(newsArticles) {
     });
 }
 
-// Search button click
+
 searchBtn.addEventListener('click', () => {
     const query = searchInput.value.trim();
     fetchNews(query);
@@ -55,3 +54,4 @@ searchBtn.addEventListener('click', () => {
 
 // Load top headlines on page load
 fetchNews();
+
