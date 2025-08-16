@@ -1,37 +1,50 @@
-const apiKey = 'pub_25b285170f7842f8afbb3844c6cc13d6'; 
 const newsContainer = document.getElementById('news-container');
 const searchInput = document.getElementById('search-input');
 const searchBtn = document.getElementById('search-btn');
 
-async function fetchNews(query = '') {
-    try {
-        let url = `https://newsdata.io/api/1/news?apikey=${apiKey}&language=en`;
+// List of RSS feeds
+const feeds = [
+    'https://feeds.bbci.co.uk/news/rss.xml',
+    'https://www.theguardian.com/world/rss'
+];
 
-        if (query) {
-            url += `&q=${encodeURIComponent(query)}`;
+let allArticles = [];
+
+// Fetch and parse RSS feeds
+async function fetchNews() {
+    allArticles = [];
+    newsContainer.innerHTML = '<p>Loading news...</p>';
+
+    for (const feed of feeds) {
+        const url = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed)}`;
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.items && data.items.length > 0) {
+                allArticles = allArticles.concat(data.items);
+            }
+        } catch (error) {
+            console.error('Error fetching feed:', error);
         }
-
-        const response = await fetch(url);
-        const data = await response.json();
-
-        if (data.status === 'ok' && data.results.length > 0) {
-            displayArticles(data.results);
-        } else {
-            newsContainer.innerHTML = '<p>No articles found.</p>';
-        }
-    } catch (error) {
-        newsContainer.innerHTML = `<p>Error fetching news: ${error}</p>`;
-        console.error(error);
     }
+
+    displayArticles(allArticles);
 }
 
-function displayArticles(newsArticles) {
+// Display articles
+function displayArticles(articles) {
     newsContainer.innerHTML = '';
-    newsArticles.forEach(article => {
+
+    if (!articles.length) {
+        newsContainer.innerHTML = '<p>No articles found.</p>';
+        return;
+    }
+
+    articles.forEach(article => {
         const articleElement = document.createElement('div');
         articleElement.className = 'article';
         articleElement.innerHTML = `
-            <img src="${article.image_url || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="${article.title}">
+            <img src="${article.thumbnail || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="${article.title}">
             <h2>${article.title}</h2>
             <p>${article.description || ''}</p>
             <a href="${article.link}" target="_blank">Read More</a>
@@ -40,10 +53,18 @@ function displayArticles(newsArticles) {
     });
 }
 
+// Search functionality
 searchBtn.addEventListener('click', () => {
-    const query = searchInput.value.trim();
-    fetchNews(query);
+    const query = searchInput.value.trim().toLowerCase();
+    if (!query) {
+        displayArticles(allArticles);
+        return;
+    }
+    const filtered = allArticles.filter(article => 
+        article.title.toLowerCase().includes(query) ||
+        (article.description && article.description.toLowerCase().includes(query))
+    );
+    displayArticles(filtered);
 });
 
-fetchNews(); 
-
+fetchNews();
