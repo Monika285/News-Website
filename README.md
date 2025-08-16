@@ -1,5 +1,5 @@
 # News-Website
-A dynamic news website -
+✨✨ A dynamic news website -
 
 🌍 Aggregates news from multiple global sources
 
@@ -8,6 +8,6 @@ A dynamic news website -
 📂 Category-based browsing for easy navigation
 
 
-LIVE DEMO : 
+🚀🚀 LIVE DEMO 🚀🚀 : 
 
  https://monika285.github.io/News-Website/
