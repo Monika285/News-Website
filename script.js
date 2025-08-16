@@ -6,6 +6,7 @@ const searchBtn = document.getElementById('search-btn');
 async function fetchNews(query = '') {
     try {
         let url = `https://newsdata.io/api/1/news?apikey=${apiKey}&language=en`;
+
         if (query) {
             url += `&q=${encodeURIComponent(query)}`;
         }
@@ -45,3 +46,4 @@ searchBtn.addEventListener('click', () => {
 });
 
 fetchNews(); 
+
